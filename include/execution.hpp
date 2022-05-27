@@ -255,7 +255,7 @@ namespace std::execution {
       __t<__concat_completion_signatures<_Completions...>>;
 
   template <class _Traits, class _Env>
-    concept __valid_completion_signatures =
+    concept __valid__completion_signatures =
       __is_instance_of<_Traits, completion_signatures> ||
       (
         same_as<_Traits, dependent_completion_signatures<no_env>> &&
@@ -326,12 +326,12 @@ namespace std::execution {
         if constexpr (tag_invocable<get_completion_signatures_t, _Sender, _Env>) {
           using _Completions =
             tag_invoke_result_t<get_completion_signatures_t, _Sender, _Env>;
-          static_assert(__valid_completion_signatures<_Completions, _Env>);
+          static_assert(__valid__completion_signatures<_Completions, _Env>);
           return _Completions{};
         } else if constexpr (requires { typename remove_cvref_t<_Sender>::completion_signatures; }) {
           using _Completions =
             typename remove_cvref_t<_Sender>::completion_signatures;
-          static_assert(__valid_completion_signatures<_Completions, _Env>);
+          static_assert(__valid__completion_signatures<_Completions, _Env>);
           return _Completions{};
         } else if constexpr (__awaitable<_Sender>) {
           using _Result = __await_result_t<_Sender>;
@@ -357,7 +357,7 @@ namespace std::execution {
     concept __sender =
       requires (_Sender&& __sndr, _Env&& __env) {
         { get_completion_signatures((_Sender&&) __sndr, (_Env&&) __env) } ->
-          __valid_completion_signatures<_Env>;
+          __valid__completion_signatures<_Env>;
       };
 
   template <class _Sender, class _Env = no_env>
@@ -465,7 +465,7 @@ namespace std::execution {
   template <class _Sender, class _Env = no_env>
     concept __single_typed_sender =
       sender<_Sender, _Env> &&
-      __valid<__single_sender_value_t, _Sender, _Env>;
+      __valid_<__single_sender_value_t, _Sender, _Env>;
 
   template <class _Sender, class _Env = no_env>
     using __single_value_variant_sender_t =
@@ -474,7 +474,7 @@ namespace std::execution {
   template <class _Sender, class _Env = no_env>
     concept __single_value_variant_sender =
       sender<_Sender, _Env> &&
-      __valid<__single_value_variant_sender_t, _Sender, _Env>;
+      __valid_<__single_value_variant_sender_t, _Sender, _Env>;
 
   /////////////////////////////////////////////////////////////////////////////
   namespace __completion_signatures {
@@ -571,13 +571,13 @@ namespace std::execution {
   template<
     class _Sender,
     class _Env = no_env,
-    __valid_completion_signatures<_Env> _Sigs =
+    __valid__completion_signatures<_Env> _Sigs =
       completion_signatures<>,
     template <class...> class _SetValue =
       __completion_signatures::__default_set_value,
     template <class> class _SetError =
       __completion_signatures::__default_set_error,
-    __valid_completion_signatures<_Env> _SetStopped =
+    __valid__completion_signatures<_Env> _SetStopped =
       completion_signatures<set_stopped_t()>>
       requires sender<_Sender, _Env>
   using make_completion_signatures =

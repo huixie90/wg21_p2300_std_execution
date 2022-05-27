@@ -181,33 +181,33 @@ namespace std {
     using __minvoke3 = typename _Fn::template __f<_First, _Second, _Third>;
 
   template <template <class...> class _T, class... _Args>
-    concept __valid = requires { typename _T<_Args...>; };
+    concept __valid_ = requires { typename _T<_Args...>; };
 
   template <template <class> class _T, class _First>
-    concept __valid1 = requires { typename _T<_First>; };
+    concept __valid_1 = requires { typename _T<_First>; };
 
   template <template <class, class> class _T, class _First, class _Second>
-    concept __valid2 = requires { typename _T<_First, _Second>; };
+    concept __valid_2 = requires { typename _T<_First, _Second>; };
 
   template <template <class, class, class> class _T, class _First, class _Second, class _Third>
-    concept __valid3 = requires { typename _T<_First, _Second, _Third>; };
+    concept __valid_3 = requires { typename _T<_First, _Second, _Third>; };
 
   template <class _Fn, class... _Args>
-    concept __minvocable = __valid<_Fn::template __f, _Args...>;
+    concept __minvocable = __valid_<_Fn::template __f, _Args...>;
 
   template <class _Fn, class _First>
-    concept __minvocable1 = __valid1<_Fn::template __f, _First>;
+    concept __minvocable1 = __valid_1<_Fn::template __f, _First>;
 
   template <class _Fn, class _First, class _Second>
-    concept __minvocable2 = __valid2<_Fn::template __f, _First, _Second>;
+    concept __minvocable2 = __valid_2<_Fn::template __f, _First, _Second>;
 
   template <class _Fn, class _First, class _Second, class _Third>
-    concept __minvocable3 = __valid3<_Fn::template __f, _First, _Second, _Third>;
+    concept __minvocable3 = __valid_3<_Fn::template __f, _First, _Second, _Third>;
 
   template <template <class...> class _T>
     struct __defer {
       template <class... _Args>
-          requires __valid<_T, _Args...>
+          requires __valid_<_T, _Args...>
         struct __f_ { using type = _T<_Args...>; };
       template <class _A>
           requires requires { typename _T<_A>; }
