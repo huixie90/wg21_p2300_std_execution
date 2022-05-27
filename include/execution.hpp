@@ -4142,9 +4142,6 @@ namespace std::this_thread {
           variant<monostate, _Tuple, exception_ptr, execution::set_stopped_t> __data_{};
         };
 
-      template <class _Sender>
-        using __into_variant_result_t =
-          decltype(execution::into_variant(__declval<_Sender>()));
     } // namespace __impl
 
     ////////////////////////////////////////////////////////////////////////////
