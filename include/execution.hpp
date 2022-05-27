@@ -222,7 +222,7 @@ namespace std::execution {
         using __count_of =
           integral_constant<
             size_t,
-            (__mapply<__mcount, __signal_args_t<_Sigs, _Tag>>::value + ...)>;
+            __sum_pack(__mapply<__mcount, __signal_args_t<_Sigs, _Tag>>::value...)>;
 
       template <template <class...> class _Tuple, template <class...> class _Variant>
         using __value_types =

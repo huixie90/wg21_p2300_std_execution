@@ -327,17 +327,26 @@ namespace std {
       using __f = integral_constant<size_t, sizeof...(_Ts)>;
   };
 
+  template <class... Ts>
+  consteval auto __sum_pack(Ts... ts){
+    if constexpr (sizeof...(Ts) == 0){
+      return 0; // msvc doesn't like (0 + ts + ...)
+    } else{
+      return (ts + ...);
+    }
+  }
+
   template <class _Fn>
     struct __mcount_if {
       template <class... _Ts>
         using __f =
-          integral_constant<size_t, (bool(__minvoke1<_Fn, _Ts>::value) + ...)>;
+          integral_constant<size_t, __sum_pack(bool(__minvoke1<_Fn, _Ts>::value)...)>;
     };
 
   template <class _T>
     struct __contains {
       template <class... _Args>
-        using __f = __bool<(__v<is_same<_T, _Args>> ||...)>;
+        using __f = conjunction<is_same<_T, _Args>...>;
     };
 
   template <class _Continuation = __q<__types>>
