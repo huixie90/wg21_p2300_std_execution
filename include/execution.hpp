@@ -321,8 +321,8 @@ namespace std::execution {
     struct get_completion_signatures_t {
       template <class _Sender, class _Env = no_env>
       constexpr auto operator()(_Sender&&, const _Env& = {}) const noexcept {
-        static_assert(sizeof(_Sender), "Incomplete type used with get_completion_signatures");
-        static_assert(sizeof(_Env), "Incomplete type used with get_completion_signatures");
+        static_assert(sizeof(_Sender) != 0, "Incomplete type used with get_completion_signatures");
+        static_assert(sizeof(_Env) != 0, "Incomplete type used with get_completion_signatures");
         if constexpr (tag_invocable<get_completion_signatures_t, _Sender, _Env>) {
           using _Completions =
             tag_invoke_result_t<get_completion_signatures_t, _Sender, _Env>;
