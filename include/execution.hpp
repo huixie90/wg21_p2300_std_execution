@@ -870,16 +870,16 @@ namespace std::execution {
         }
 
         template <class _Awaitable>
-        _Awaitable&& await_transform(_Awaitable&& __await) noexcept {
-          return (_Awaitable&&) __await;
+        _Awaitable&& await_transform(_Awaitable&& __awaitable) noexcept {
+          return (_Awaitable&&) __awaitable;
         }
 
         template <class _Awaitable>
           requires tag_invocable<as_awaitable_t, _Awaitable, __promise&>
-        auto await_transform(_Awaitable&& __await)
+        auto await_transform(_Awaitable&& __awaitable)
             noexcept(nothrow_tag_invocable<as_awaitable_t, _Awaitable, __promise&>)
             -> tag_invoke_result_t<as_awaitable_t, _Awaitable, __promise&> {
-          return tag_invoke(as_awaitable, (_Awaitable&&) __await, *this);
+          return tag_invoke(as_awaitable, (_Awaitable&&) __awaitable, *this);
         }
 
         // Pass through the get_env receiver query
@@ -900,7 +900,7 @@ namespace std::execution {
     struct __connect_awaitable_t {
      private:
       template <class _Awaitable, class _Receiver>
-      static __operation_t<_Receiver> __co_impl(_Awaitable __await, _Receiver __rcvr) {
+      static __operation_t<_Receiver> __co_impl(_Awaitable __awaitable, _Receiver __rcvr) {
         using __result_t = __await_result_t<_Awaitable, __promise_t<_Receiver>>;
         exception_ptr __eptr;
         try {
@@ -918,9 +918,9 @@ namespace std::execution {
             };
           };
           if constexpr (is_void_v<__result_t>)
-            co_yield (co_await (_Awaitable &&) __await, __fun());
+            co_yield (co_await (_Awaitable &&) __awaitable, __fun());
           else
-            co_yield __fun(co_await (_Awaitable &&) __await);
+            co_yield __fun(co_await (_Awaitable &&) __awaitable);
         } catch (...) {
           __eptr = current_exception();
         }
@@ -941,8 +941,8 @@ namespace std::execution {
      public:
       template <class _Receiver, __awaitable<__promise_t<_Receiver>> _Awaitable>
           requires receiver_of<_Receiver, __completions_t<_Receiver, _Awaitable>>
-        __operation_t<_Receiver> operator()(_Awaitable&& __await, _Receiver&& __rcvr) const {
-          return __co_impl((_Awaitable&&) __await, (_Receiver&&) __rcvr);
+        __operation_t<_Receiver> operator()(_Awaitable&& __awaitable, _Receiver&& __rcvr) const {
+          return __co_impl((_Awaitable&&) __awaitable, (_Receiver&&) __rcvr);
         }
     };
   } // namespace __connect_awaitable_
@@ -1015,9 +1015,9 @@ namespace std::execution {
       template <class _Awaitable, class _Receiver>
         requires (!__connectable_sender_with<_Awaitable, _Receiver>) &&
           __callable<__connect_awaitable_t, _Awaitable, _Receiver>
-      auto operator()(_Awaitable&& __await, _Receiver&& __rcvr) const
+      auto operator()(_Awaitable&& __awaitable, _Receiver&& __rcvr) const
         -> __connect_awaitable_::__operation_t<_Receiver> {
-        return __connect_awaitable((_Awaitable&&) __await, (_Receiver&&) __rcvr);
+        return __connect_awaitable((_Awaitable&&) __awaitable, (_Receiver&&) __rcvr);
       }
       // This overload is purely for the purposes of debugging why a
       // sender will not connect. Use the __debug_sender function below.
