@@ -3849,8 +3849,8 @@ namespace std::execution {
                 }
               }
 
-              __operation(_WhenAll&& when_all, _Receiver __rcvr)
-                : __child_states_{__connect_children(this, (_WhenAll&&) when_all, _Indices{})}
+              __operation(_WhenAll&& __when_all, _Receiver __rcvr)
+                : __child_states_{__connect_children(this, (_WhenAll&&) __when_all, _Indices{})}
                 , __recvr_((_Receiver&&) __rcvr)
               {}
               __operation(__operation&&) = delete;

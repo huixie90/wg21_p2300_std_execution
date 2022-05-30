@@ -346,7 +346,7 @@ namespace std {
   template <class _T>
     struct __contains {
       template <class... _Args>
-        using __f = conjunction<is_same<_T, _Args>...>;
+        using __f = disjunction<is_same<_T, _Args>...>;
     };
 
   template <class _Continuation = __q<__types>>
