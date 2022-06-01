@@ -487,6 +487,21 @@ namespace std {
   template <class _Fn>
     __conv(_Fn) -> __conv<_Fn>;
 
+  #ifdef _MSC_VER
+  // MSVC bug: is_convertible<__conv, T> returns false
+  template <class _Fn>  
+  struct is_convertible<__conv<_Fn>&&, __call_result_t<_Fn>> : std::true_type{};
+
+  template <class _Fn>  
+  struct is_convertible<__conv<_Fn>, __call_result_t<_Fn>> : std::true_type{};
+
+  template <class _Fn>  
+  struct is_constructible<__call_result_t<_Fn>, __conv<_Fn>&&> : std::true_type{};
+
+  template <class _Fn>  
+  struct is_constructible<__call_result_t<_Fn>, __conv<_Fn>> : std::true_type{};
+  #endif
+
   template <class _T>
     using __cref_t = const remove_reference_t<_T>&;
 
