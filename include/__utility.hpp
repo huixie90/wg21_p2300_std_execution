@@ -495,11 +495,23 @@ namespace std {
   template <class _Fn>  
   struct is_convertible<__conv<_Fn>, __call_result_t<_Fn>> : std::true_type{};
 
+  template <class _Fn>
+  inline constexpr bool is_convertible_v<__conv<_Fn>&&, __call_result_t<_Fn>> = true;
+
+  template <class _Fn>
+  inline constexpr bool is_convertible_v<__conv<_Fn>, __call_result_t<_Fn>> = true;
+
   template <class _Fn>  
   struct is_constructible<__call_result_t<_Fn>, __conv<_Fn>&&> : std::true_type{};
 
   template <class _Fn>  
   struct is_constructible<__call_result_t<_Fn>, __conv<_Fn>> : std::true_type{};
+
+  template <class _Fn>
+  inline constexpr bool is_constructible_v<__call_result_t<_Fn>, __conv<_Fn>&&> = true;
+
+  template <class _Fn>
+  inline constexpr bool is_constructible_v<__call_result_t<_Fn>, __conv<_Fn>> = true;
   #endif
 
   template <class _T>
